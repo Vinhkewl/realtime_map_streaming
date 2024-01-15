@@ -3,3 +3,4 @@ googlemaps
 matplotlib
 folium
 re
+pip install confluent-kafka
