@@ -20,13 +20,32 @@
             ws.onmessage = function(event) {
                 const measurement = JSON.parse(event.data);
                 console.log(measurement);
-                marker = L.marker([measurement.vehicle.position.latitude, measurement.vehicle.position.longitude])
-                circle = L.circle([measurement.vehicle.position.latitude, measurement.vehicle.position.longitude], {radius: 4})
 
-                var featureGroup = L.featureGroup([marker, circle]).addTo(map)
+                // Create a marker and a circle for the measurement
+                const marker = L.marker([measurement.vehicle.position.latitude, measurement.vehicle.position.longitude]);
+                const circle = L.circle([measurement.vehicle.position.latitude, measurement.vehicle.position.longitude], {radius: 4});
 
-                map.fitBounds(featureGroup.getBounds())
+                // Remove the oldest marker and circle from the map if there are more than 3 markers
+                if (markers.length > 2) {
+                    map.removeLayer(markers[0]);
+                    map.removeLayer(circles[0]);
+                    markers.shift();
+                    circles.shift();
+                }
+
+                // Add the new marker and circle to the map
+                markers.push(marker);
+                circles.push(circle);
+                marker.addTo(map);
+                circle.addTo(map);
+
+                // Fit the map bounds to the bounds of the markers
+                map.fitBounds(L.featureGroup(markers).getBounds());
             };
+
+            // Initialize the arrays to store the markers and circles
+            const markers = [];
+            const circles = [];
         </script>
     </body>
 </html>

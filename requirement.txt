@@ -1,4 +1,5 @@
 kafka-python 
 matplotlib
 re
+fast-api
 confluent-kafka

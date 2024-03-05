@@ -17,9 +17,6 @@ templates = Jinja2Templates(directory="templates")
 KAFKA_SERVER = 'localhost:9092'
 TOPIC = 'coordinates'
 
-with open('measurements.json', 'r') as file:
-    measurements = json.loads(file.read())
-
 consumer = KafkaConsumer(TOPIC,
                              bootstrap_servers=KAFKA_SERVER,
                              api_version=(0, 11, 5),
