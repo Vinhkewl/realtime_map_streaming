@@ -1,6 +1,4 @@
 kafka-python 
-googlemaps 
 matplotlib
-folium
 re
 confluent-kafka
