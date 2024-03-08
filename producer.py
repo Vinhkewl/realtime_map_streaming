@@ -44,7 +44,8 @@ def fetch_coordinates():
         # Iterate over the feed entities
         for entity in feed.entity:
             # Convert the entity to a dictionary
-            if re.search(r'47/668', entity.id):
+            # 18/165 47/668 22/943
+            if re.search(r'22/943', entity.id):
                 entity_dict = {
                     'id': entity.id,
                     'vehicle': {
