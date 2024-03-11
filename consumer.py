@@ -5,7 +5,9 @@ import logging.config
 from fastapi import FastAPI
 from fastapi import Request
 from fastapi import WebSocket
+from pathlib import Path
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 import json
 from kafka import KafkaConsumer
@@ -13,6 +15,12 @@ from kafka import KafkaConsumer
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+app.mount(
+    "/static",
+    StaticFiles(directory=Path(__file__).parent.parent.absolute() / "realtime_map_streaming/static"),
+    name="static",
+)
+
 templates = Jinja2Templates(directory="templates")
 KAFKA_SERVER = 'localhost:9092'
 TOPIC = 'coordinates'
