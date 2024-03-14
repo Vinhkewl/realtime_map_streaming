@@ -30,6 +30,8 @@ submitBtn.addEventListener('click', e => {
         }
         marker1 = L.marker([dict.lat, dict.long], {icon: greenIcon}).bindPopup('You are here').addTo(map).openPopup();
         map.setView([dict.lat, dict.long], 13);
+        dict.lat = 0;
+        dict.long = 0;
     })
 lat.addEventListener('change', (e) => {
         dict.lat = +e.target.value
@@ -39,23 +41,15 @@ long.addEventListener('change', e => {
         dict.long = +e.target.value
     })
 
+
 // Define realtime marker
+
 const ws = new WebSocket("ws://localhost:8000/ws");
 
 ws.onmessage = function (event) {
     const measurement = JSON.parse(event.data);
     submitBtn.addEventListener('click', e => {
-
-        e.preventDefault();
-
-        const startLat = parseFloat(dict.lat);
-        const startLng = parseFloat(dict.long);
-        const destLat = parseFloat(measurement.vehicle.position.latitude);
-        const destLng = parseFloat(measurement.vehicle.position.longitude);
-        runDirection(startLat,startLng,destLat,destLng)
-        console.log(startLat,startLng,destLat,destLng)
-        dict.lat = 0;
-        dict.long = 0;
+        runDirection(dict.lat,dict.long,measurement.vehicle.position.latitude,measurement.vehicle.position.longitude)
     })
 
     // Create a marker and a circle for the measurement
@@ -82,19 +76,23 @@ ws.onmessage = function (event) {
 // Initialize the arrays to store the markers and circles
 const markers = [];
 const circles = [];
+
+
 //Find route when button click
 function runDirection(startLat, startLng, destLat, destLng) {
+        
+    // recreating new map layer after removal
+    let map = L.map('map', {
+        layers: MQ.mapLayer(),
+        center: [0, 0], // Set the center to [0, 0] to show the whole world
+        zoom: 1 // Set the zoom level to 1 to show the whole world
+    });
     
     var dir = MQ.routing.directions();
 
     dir.route({
         locations: [`${startLat},${startLng}`, `${destLat},${destLng}`],
       });
-    directionsLayer = MQ.Routing.RouteLayer.extend({
-        createStartMarker: () => null, // Return null to disable start marker creation
-    
-        createEndMarker: () => null // Return null to disable end marker creation
-    });
 
     directionsLayer = new directionsLayer({
         directions: dir,
