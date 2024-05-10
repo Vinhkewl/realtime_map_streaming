@@ -1,5 +1,9 @@
 kafka-python 
+kafka
 matplotlib
+folium
+json
 re
 fast-api
 confluent-kafka
+gtfs-realtime-bindings

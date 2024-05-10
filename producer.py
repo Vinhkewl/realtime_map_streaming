@@ -11,18 +11,21 @@ from kafka import KafkaConsumer
 
 try:
     admin_client = KafkaAdminClient(
+
+        #Declare kafka bootstrap server IP
         bootstrap_servers="localhost:9092",
         client_id='tracking'
     )
 
-    topic_list = [NewTopic(name="coordinates", num_partitions=1, replication_factor=1)]
+    #Declare number of partitions, replication factor, topic names
+    topic_list = [NewTopic(name="coordinates", num_partitions=1, replication_factor=1)]     #Replace with your own name and num partitions
     admin_client.create_topics(new_topics=topic_list, validate_only=False)
 except:
     pass
 
 api_url = 'https://realtime.hsl.fi/realtime/vehicle-positions/v2/hsl'  # Replace with your API endpoint
-KAFKA_SERVER = 'localhost:9092'
-TOPIC = 'coordinates'
+KAFKA_SERVER = 'localhost:9092'     #Replace
+TOPIC = 'coordinates'       #Replace
 
 
 def fetch_coordinates():
@@ -46,6 +49,8 @@ def fetch_coordinates():
             # Convert the entity to a dictionary
             # 18/165 47/668 22/943
             if re.search(r'22/943', entity.id):
+
+                #Declare the schema of output payload
                 entity_dict = {
                     'id': entity.id,
                     'vehicle': {
